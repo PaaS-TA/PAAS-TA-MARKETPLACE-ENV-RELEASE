@@ -32,8 +32,8 @@
 
 VM명 | 인스턴스 수 | vCPU수 | 메모리(GB) | 디스크(GB)
 :--- | :---: | :---: | :---:| :---
-binary_storage | 1 | 1 |1 | 
-mariadb | 1 | 1 | 2 | Root 8G + Persistent disk 10G
+binary_storage | 1 | 1vCPU |1GB | 2GB
+mariadb | 1 | 1vCPU | 2GB | 50GB
 
 ### <div id="1.4"/> 1.4. 참고자료
 > http://bosh.io/docs  

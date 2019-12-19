@@ -61,7 +61,7 @@ mariadb | 1 | 1vCPU | 2GB | 50GB
         ├── python
         │   ├── Python-2.7.8.tgz
         ├── swift-all-in-one
-        │   └── swift-all-in-one.tar.gz
+            └── swift-all-in-one.tar.gz
     ```
 
 - Marketplace Environment Release 파일을 생성한다.
@@ -249,72 +249,21 @@ networks:
 Succeeded
 ```
 
-- Deployment 파일을 서버 환경에 맞게 수정한다.
+-	Deploy 스크립트 파일을 서버 환경에 맞게 수정한다.  
 
 ```
-name: paasta-marketplace-env                             # 서비스 배포이름(필수) bosh deployments 로 확인 가능한 이름
+# Deploy 스크립트 수정
+$ vi ~/workspace/PAAS-TA-MARKETPLACE-ENV-RELEASE/deployment/deploy-paasta-marketplace-env.sh
 
-releases:
-- name: paasta-marketplace-env-release
-  version: latest
+#!/bin/bash
 
-stemcells:
-- alias: default
-  os: ((stemcell_os))
-  version: latest
-
-update:
-  canaries: 1                                               # canary 인스턴스 수(필수)
-  canary_watch_time: 5000-120000                            # canary 인스턴스가 수행하기 위한 대기 시간(필수)
-  update_watch_time: 5000-120000                            # non-canary 인스턴스가 수행하기 위한 대기 시간(필수)
-  max_in_flight: 1                                          # non-canary 인스턴스가 병렬로 update 하는 최대 개수(필수)
-  serial: false
-
-instance_groups:
-- name: binary_storage
-  azs:
-  - z2
-  instances: 1
-  stemcell: default
-  persistent_disk: 102400
-  vm_type: ((vm_type_medium))
-  networks:
-  - name: ((default_network_name))
-  jobs:
-  - name: binary_storage
-    release: paasta-marketplace-env-release
-- name: mariadb
-  instances: 1
-  azs:
-  - z2
-  stemcell: default
-  vm_type: ((vm_type_small))
-  persistent_disk: 4096
-  networks:
-  - name: ((default_network_name))
-  jobs:
-  - name: mariadb
-    release: paasta-marketplace-env-release
-
-######### PROPERTIES ##########
-properties:
-  mariadb:                                                 # MARIA DB SERVER 설정 정보
-    port: ((db_port))
-    admin_user:
-      password: ((db_admin_password))                      # MARIA DB ADMIN USER PASSWORD
-  binary_storage:                                          # BINARY STORAGE SERVER 설정 정보
-    proxy_port: 10008                                      # 프록시 서버 Port(Object Storage 접속 Port)
-    auth_port: 5000
-    username:                                              # 최초 생성되는 유저이름(Object Storage 접속 유저이름)
-      - paasta-marketplace
-    password:                                              # 최초 생성되는 유저 비밀번호(Object Storage 접속 유저 비밀번호)
-      - paasta
-    tenantname:                                            # 최초 생성되는 테넌트 이름(Object Storage 접속 테넌트 이름)
-      - paasta-marketplace
-    email:                                                 # 최소 생성되는 유저의 이메일
-      - email@email.com
-    binary_desc:
-      - 'marketplace-container'
+bosh -e micro-bosh -d ${DEPLOYMENT_NAME} deploy ${DEPLOYMENT_NAME}.yml \
+    -v default_network_name=default \
+    -v stemcell_os=ubuntu-xenial \
+    -v vm_type_small=small \
+    -v vm_type_medium=medium \                
+    -v db_port=3306 \
+    -v db_admin_password="${DB_ADMIN_PASSWORD}"              ## mariadb 패스워드
 ```
 
 - paasta-marketplace-env를 배포한다.
@@ -434,6 +383,6 @@ $ bosh -e micro-bosh -d paasta-marketplace-env vms
 Deployment 'paasta-marketplace-env'
 
 Instance                                             Process State  AZ  IPs              VM CID                                   VM Type  Active
-binary_storage/66e5bf20-da8d-42b4-a325-fba5f6e326e8  running        z2  XXX.XXX.XXX.XXX  vm-a81d9fe1-e9e8-4729-9786-bbb5f1518234  medium   true
-mariadb/01ce2b6f-1038-468d-92f8-f68f72f7ea77         running        z2  XXX.XXX.XXX.XXX  vm-ce5deeed-ba4e-49d1-b6ab-1f07c779e776  small    true
+binary_storage/66e5bf20-da8d-42b4-a325-fba5f6e326e8  running        z2  10.174.1.56      vm-a81d9fe1-e9e8-4729-9786-bbb5f1518234  medium   true
+mariadb/01ce2b6f-1038-468d-92f8-f68f72f7ea77         running        z2  10.174.1.57      vm-ce5deeed-ba4e-49d1-b6ab-1f07c779e776  small    true
 ```

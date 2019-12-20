@@ -253,7 +253,8 @@ Succeeded
 
 ```
 # Deploy 스크립트 수정
-$ vi deployment/deploy-paasta-marketplace-env.sh
+$ cd deployment
+$ vi deploy-paasta-marketplace-env.sh
 
 #!/bin/bash
 
@@ -269,7 +270,7 @@ bosh -e micro-bosh -d paasta-marketplace-env deploy paasta-marketplace-env.yml \
 - paasta-marketplace-env를 배포한다.
 
 ```
-$ sh deployment/deploy-paasta-marketplace-env.sh
+$ sh deploy-paasta-marketplace-env.sh
 Using environment '10.174.0.3' as client 'admin'
 
 Using deployment 'paasta-marketplace-env'

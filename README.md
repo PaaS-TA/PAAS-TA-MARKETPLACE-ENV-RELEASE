@@ -249,6 +249,74 @@ networks:
 Succeeded
 ```
 
+-	paasta-marketplace-env.yml를 확인한다. (paasta-marketplace-env.yml에는 마켓플레이스에 필요한 binary_storage, mariadb 명세가 있다.)
+
+```
+name: paasta-marketplace-env                             # 서비스 배포이름(필수) bosh deployments 로 확인 가능한 이름
+
+releases:
+- name: paasta-marketplace-env-release
+  version: latest
+
+stemcells:
+- alias: default
+  os: ((stemcell_os))
+  version: latest
+
+update:
+  canaries: 1                                               # canary 인스턴스 수(필수)
+  canary_watch_time: 5000-120000                            # canary 인스턴스가 수행하기 위한 대기 시간(필수)
+  update_watch_time: 5000-120000                            # non-canary 인스턴스가 수행하기 위한 대기 시간(필수)
+  max_in_flight: 1                                          # non-canary 인스턴스가 병렬로 update 하는 최대 개수(필수)
+  serial: false
+
+instance_groups:
+- name: binary_storage
+  azs:
+  - z2
+  instances: 1
+  stemcell: default
+  persistent_disk: 102400
+  vm_type: ((vm_type_medium))
+  networks:
+  - name: ((default_network_name))
+  jobs:
+  - name: binary_storage
+    release: paasta-marketplace-env-release
+- name: mariadb
+  instances: 1
+  azs:
+  - z2
+  stemcell: default
+  vm_type: ((vm_type_small))
+  persistent_disk: 4096
+  networks:
+  - name: ((default_network_name))
+  jobs:
+  - name: mariadb
+    release: paasta-marketplace-env-release
+
+######### PROPERTIES ##########
+properties:
+  mariadb:                                                 # MARIA DB SERVER 설정 정보
+    port: ((db_port))
+    admin_user:
+      password: ((db_admin_password))                      # MARIA DB ADMIN USER PASSWORD
+  binary_storage:                                          # BINARY STORAGE SERVER 설정 정보
+    proxy_port: 10008                                      # 프록시 서버 Port(Object Storage 접속 Port)
+    auth_port: 5000
+    username:                                              # 최초 생성되는 유저이름(Object Storage 접속 유저이름)
+      - paasta-marketplace
+    password:                                              # 최초 생성되는 유저 비밀번호(Object Storage 접속 유저 비밀번호)
+      - paasta
+    tenantname:                                            # 최초 생성되는 테넌트 이름(Object Storage 접속 테넌트 이름)
+      - paasta-marketplace
+    email:                                                 # 최소 생성되는 유저의 이메일
+      - email@email.com
+    binary_desc:
+      - 'marketplace-container'
+```
+
 -	Deploy 스크립트 파일을 서버 환경에 맞게 수정한다.  
 
 ```

@@ -253,23 +253,23 @@ Succeeded
 
 ```
 # Deploy 스크립트 수정
-$ vi ~/workspace/PAAS-TA-MARKETPLACE-ENV-RELEASE/deployment/deploy-paasta-marketplace-env.sh
+$ vi deployment/deploy-paasta-marketplace-env.sh
 
 #!/bin/bash
 
-bosh -e micro-bosh -d ${DEPLOYMENT_NAME} deploy ${DEPLOYMENT_NAME}.yml \
+bosh -e micro-bosh -d paasta-marketplace-env deploy paasta-marketplace-env.yml \
     -v default_network_name=default \
     -v stemcell_os=ubuntu-xenial \
     -v vm_type_small=small \
-    -v vm_type_medium=medium \                
-    -v db_port=3306 \
-    -v db_admin_password="${DB_ADMIN_PASSWORD}"              ## mariadb 패스워드
+    -v vm_type_medium=medium \
+    -v db_port=3306 \                                  ## DB port 설정
+    -v db_admin_password="admin!password"              ## DB Admin 패스워드 설정
 ```
 
 - paasta-marketplace-env를 배포한다.
 
 ```
-$ sh ./deploy-paasta-marketplace-env.sh
+$ sh deployment/deploy-paasta-marketplace-env.sh
 Using environment '10.174.0.3' as client 'admin'
 
 Using deployment 'paasta-marketplace-env'

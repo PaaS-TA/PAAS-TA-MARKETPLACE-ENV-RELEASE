@@ -252,6 +252,10 @@ Succeeded
 -	paasta-marketplace-env.yml를 확인한다. (paasta-marketplace-env.yml에는 마켓플레이스에 필요한 binary_storage, mariadb 명세가 있다.)
 
 ```
+# paasta-marketplace-env.yml
+$ cd deployment
+$ vi paasta-marketplace-env.yml
+
 name: paasta-marketplace-env                             # 서비스 배포이름(필수) bosh deployments 로 확인 가능한 이름
 
 releases:

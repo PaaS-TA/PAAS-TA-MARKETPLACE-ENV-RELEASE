@@ -277,13 +277,16 @@ update:
 instance_groups:
 - name: binary_storage
   azs:
-  - z2
+  - z7
   instances: 1
   stemcell: default
   persistent_disk: 102400
   vm_type: ((vm_type_medium))
   networks:
   - name: ((default_network_name))
+    default: [dns, gateway]
+  - name: ((public_network_name))
+    static_ips: xxx.xxx.xxx.xxx                             # Object Storage 의 public_IP(아래 properties.binary_storage.proxy_ip 와 동일)
   jobs:
   - name: binary_storage
     release: paasta-marketplace-env-release
@@ -307,6 +310,7 @@ properties:
     admin_user:
       password: ((db_admin_password))                      # MARIA DB ADMIN USER PASSWORD
   binary_storage:                                          # BINARY STORAGE SERVER 설정 정보
+    proxy_ip: xxx.xxx.xxx.xxx                              # Object Storage 의 public_IP
     proxy_port: 10008                                      # 프록시 서버 Port(Object Storage 접속 Port)
     auth_port: 5000
     username:                                              # 최초 생성되는 유저이름(Object Storage 접속 유저이름)
@@ -332,6 +336,7 @@ $ vi deploy-paasta-marketplace-env.sh
 
 bosh -e micro-bosh -d paasta-marketplace-env deploy paasta-marketplace-env.yml \
     -v default_network_name=default \
+    -v public_network_name=vip \
     -v stemcell_os=ubuntu-xenial \
     -v vm_type_small=small \
     -v vm_type_medium=medium \
@@ -374,7 +379,7 @@ Using deployment 'paasta-marketplace-env'
 
 + instance_groups:
 + - azs:
-+   - z2
++   - z7
 +   instances: 1
 +   jobs:
 +   - name: binary_storage
@@ -382,6 +387,9 @@ Using deployment 'paasta-marketplace-env'
 +   name: binary_storage
 +   networks:
 +   - name: default
++     default: [dns, gateway]
++   - name: vip
++     static_ips: xxx.xxx.xxx.xxx 
 +   persistent_disk: 102400
 +   stemcell: default
 +   vm_type: medium
@@ -408,6 +416,8 @@ Using deployment 'paasta-marketplace-env'
 +     email:
 +     - "<redacted>"
 +     password:
++     - "<redacted>"
++     proxy_ip:
 +     - "<redacted>"
 +     proxy_port: "<redacted>"
 +     tenantname:
@@ -456,6 +466,7 @@ $ bosh -e micro-bosh -d paasta-marketplace-env vms
 Deployment 'paasta-marketplace-env'
 
 Instance                                             Process State  AZ  IPs              VM CID                                   VM Type  Active
-binary_storage/66e5bf20-da8d-42b4-a325-fba5f6e326e8  running        z2  10.174.1.56      vm-a81d9fe1-e9e8-4729-9786-bbb5f1518234  medium   true
+binary_storage/66e5bf20-da8d-42b4-a325-fba5f6e326e8  running        z7  10.174.1.56      vm-a81d9fe1-e9e8-4729-9786-bbb5f1518234  medium   true
+                                                                        xxx.xxx.xxx
 mariadb/01ce2b6f-1038-468d-92f8-f68f72f7ea77         running        z2  10.174.1.57      vm-ce5deeed-ba4e-49d1-b6ab-1f07c779e776  small    true
 ```

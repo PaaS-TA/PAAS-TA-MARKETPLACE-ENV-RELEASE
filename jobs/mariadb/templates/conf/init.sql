@@ -7,6 +7,21 @@ CREATE DATABASE IF NOT EXISTS keystone CHARACTER SET utf8 COLLATE utf8_general_c
 use keystone;
 GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'swiftstack' WITH GRANT OPTION;
 
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`marketplace` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `marketplace`;
+
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`marketplace_admin` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `marketplace_admin`;
+
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`marketplace_user` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `marketplace_user`;
+
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`marketplace_seller` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `marketplace_seller`;
+
 /*
 
  Source Server Type    : MySQL

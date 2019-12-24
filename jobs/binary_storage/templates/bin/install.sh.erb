@@ -72,7 +72,7 @@ if [ ! -d "$DATA_DIR" ]; then
    openstack role add --project service --user <%= p("binary_storage.username")[index]%> admin
   <% end %>
 
-  openstack endpoint create --region paasta swift public http://<%= link('binary_storage-link').instances[0].address%>:<%= p("binary_storage.proxy_port") %>/v1/AUTH_%\(project_id\)s
+  openstack endpoint create --region paasta swift public http://<%= p("binary_storage.proxy_ip") %>:<%= p("binary_storage.proxy_port") %>/v1/AUTH_%\(project_id\)s
   #openstack endpoint create --region paasta swift admin http://<%= link('binary_storage-link').instances[0].address%>:<%= p("binary_storage.proxy_port") %>/v1
   #openstack endpoint create --region paasta swift internal http://<%= link('binary_storage-link').instances[0].address%>:<%= p("binary_storage.proxy_port") %>/v1/AUTH_%\(project_id\)s
 

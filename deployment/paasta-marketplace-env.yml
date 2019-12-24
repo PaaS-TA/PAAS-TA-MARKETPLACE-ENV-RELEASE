@@ -20,13 +20,16 @@ update:
 instance_groups:
 - name: binary_storage
   azs:
-  - z2
+  - z7
   instances: 1
   stemcell: default
   persistent_disk: 102400
   vm_type: ((vm_type_medium))
   networks:
   - name: ((default_network_name))
+    default: [dns, gateway]
+  - name: ((public_network_name))
+    static_ips: xxx.xxx.xxx.xxx                             # Object Storage 의 public_IP(아래 properties.binary_storage.proxy_ip 와 동일)
   jobs:
   - name: binary_storage
     release: paasta-marketplace-env-release
@@ -50,6 +53,7 @@ properties:
     admin_user:
       password: ((db_admin_password))                      # MARIA DB ADMIN USER PASSWORD
   binary_storage:                                          # BINARY STORAGE SERVER 설정 정보
+    proxy_ip: xxx.xxx.xxx.xxx                              # Object Storage 의 public_IP
     proxy_port: 10008                                      # 프록시 서버 Port(Object Storage 접속 Port)
     auth_port: 5000
     username:                                              # 최초 생성되는 유저이름(Object Storage 접속 유저이름)

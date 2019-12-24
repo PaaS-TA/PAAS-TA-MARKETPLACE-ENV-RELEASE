@@ -2,6 +2,7 @@
 
 bosh -e micro-bosh -d paasta-marketplace-env deploy paasta-marketplace-env.yml \
     -v default_network_name=default \
+    -v public_network_name=vip \
     -v stemcell_os=ubuntu-xenial \
     -v vm_type_small=small \
     -v vm_type_medium=medium \

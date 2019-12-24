@@ -42,6 +42,8 @@ consumes:
     type: binary_storage
 
 properties:
+  binary_storage.proxy_ip:
+    description: 'swift proxy ip'
   binary_storage.proxy_port:
     description: 'swift proxy port'
   binary_storage.username:

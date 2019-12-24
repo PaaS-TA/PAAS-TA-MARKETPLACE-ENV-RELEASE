@@ -55,7 +55,7 @@ if [[ -z "$DISABLE_ENDPOINTS" ]]; then
     keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
     --bootstrap-admin-url http://localhost:35357/v3/ \
     --bootstrap-internal-url http://localhost:5000/v3/ \
-    --bootstrap-public-url http://<%= link('binary_storage-link').instances[0].address%>:5000/v3/ \
+    --bootstrap-public-url http://<%= p("binary_storage.proxy_ip") %>:5000/v3/ \
     --bootstrap-region-id paasta
 fi
 
